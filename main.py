@@ -8,7 +8,8 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-tel = os.environ.get("tel")
+username = os.environ.get("username")
+pwd = os.environ.get("pwd")
 
 chrome_driver_path = os.environ.get("chrome-driver-path")
 options = webdriver.ChromeOptions()
@@ -19,6 +20,10 @@ options.add_experimental_option('prefs', {
 driver = webdriver.Chrome(executable_path=chrome_driver_path, options=options)
 
 driver.get("http://www.tinder.com")
+
+sleep(4)
+accept_cookies = driver.find_element(By.XPATH, '//*[@id="c1276625974"]/div/div[2]/div/div/div[1]/button')
+accept_cookies.click()
 
 sleep(4)
 login_button = driver.find_element(By.XPATH, '//*[@id="c1276625974"]/div/div[1]/div/main/div[1]/div/div/div/div/header/div/div[2]/div[2]/a')
@@ -36,9 +41,6 @@ tel_input.send_keys(Keys.ENTER)
 input("hit enter if you are ready!")
 
 sleep(10)
-accept_cookies = driver.find_element(By.XPATH, '//*[@id="c1276625974"]/div/div[2]/div/div/div[1]/button')
-accept_cookies.click()
-sleep(2)
 
 for _ in range(10000):
     sleep(2)
