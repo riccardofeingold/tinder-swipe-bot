@@ -2,7 +2,7 @@ from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.common.by import By
 from selenium.common.exceptions import ElementClickInterceptedException, NoSuchElementException
-import pyautogui
+import random
 from time import sleep
 import os
 from dotenv import load_dotenv
@@ -44,9 +44,6 @@ username_input.send_keys(Keys.ENTER)
 
 sleep(4)
 pwd_input = driver.find_element(By.XPATH, '//*[@id="password_text_field"]')
-input("enter your password")
-sleep(2)
-pwd_input.send_keys(Keys.ENTER)
 
 input("Enter verification code")
 
@@ -55,16 +52,24 @@ sleep(4)
 driver.switch_to.window(base_window)
 sleep(2)
 
-for _ in range(25):
-    sleep(2)
-    try:
-        like_button = driver.find_element(By.XPATH,
-            '//*[@id="main"]/div/div[1]/main/div[2]/div/div/span/div[2]/div/div[2]/div/div[3]/div/div[1]/span')
-        like_button.click()
+give_likes = True
+xpath_of_like_btn = '//*[@id="main"]/div/div[1]/main/div[2]/div/div/span/div[2]/div/div[2]/div/div[3]/div/div[1]/span'
+while give_likes:
+    for _ in range(25):
+        sleep(random.randint(2, 23))
+        try:
+            like_button = driver.find_element(By.XPATH, xpath_of_like_btn)
+            like_button.click()
 
-    # Catches the cases where there is a "Matched" pop-up in front of the "Like" button:
-    except ElementClickInterceptedException:
-        sleep(10)
+        # Catches the cases where there is a "Matched" pop-up in front of the "Like" button:
+        except NoSuchElementException:
+            xpath_of_like_btn = input("Past XPATH of like button or you've reach the end")
+        except ElementClickInterceptedException:
+            input("There's something preventing to press me the like button")
+
+    decision = input("Do you want to continue?")
+    if decision == "n":
+        give_likes = False
 
 
 driver.quit()
