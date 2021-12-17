@@ -43,7 +43,7 @@ sleep(1)
 username_input.send_keys(Keys.ENTER)
 
 sleep(4)
-pwd_input = driver.find_element(By.XPATH, '//*[@id="password_text_field"]')
+# pwd_input = driver.find_element(By.XPATH, '//*[@id="password_text_field"]')
 
 input("Enter verification code")
 
@@ -64,6 +64,8 @@ while give_likes:
         # Catches the cases where there is a "Matched" pop-up in front of the "Like" button:
         except NoSuchElementException:
             xpath_of_like_btn = input("Past XPATH of like button or you've reach the end")
+            if xpath_of_like_btn == 'end':
+                break
         except ElementClickInterceptedException:
             input("There's something preventing to press me the like button")
 
