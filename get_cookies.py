@@ -11,4 +11,4 @@ driver.get('https://tinder.com')
 
 foo = input()
 
-save_cookie(driver, '/tmp/cookie')
+save_cookie(driver, '')
