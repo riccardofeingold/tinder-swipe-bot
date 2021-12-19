@@ -1,7 +1,8 @@
 from selenium import webdriver
+from selenium.webdriver.chrome.options import Options
+from selenium.webdriver.common.by import By
 import random
 from time import sleep
-from selenium.webdriver.common.by import By
 import os
 from dotenv import load_dotenv
 from cookies import load_cookie
@@ -14,9 +15,13 @@ class TinderBot:
             'geolocation': True,
             'profile.default_content_setting_values.notifications': 2
         })
+        self.chrome_options = Options()
+        self.chrome_options.add_experimental_option("debuggerAddress", "127.0.0.1:9222")
+
+        # Change chrome driver path accordingly
         self.chrome_driver_path = os.environ.get("chrome-driver-path")
-        self.driver = webdriver.Chrome(executable_path=self.chrome_driver_path, options=self.options)
-        load_cookie(self.driver, '/tmp/cookie')
+        self.driver = webdriver.Chrome(self.chrome_driver_path, chrome_options=self.chrome_options, options=self.options)
+
         self.base_window = self.driver.window_handles[0]
 
     def login(self):
@@ -50,15 +55,11 @@ class TinderBot:
                         self.close_match()
 
     def like(self):
-        like_button = self.driver.find_element(By.XPATH, '//*[@id="o-1556761323"]/div/div[1]/div/main/div['
-                                                         '1]/div/div/div[1]/div[1]/div/div[5]/div/div['
-                                                         '4]/button/span/span')
+        like_button = self.driver.find_element(By.XPATH, '//*[@id="o-1556761323"]/div/div[1]/div/main/div[1]/div/div/div[1]/div[1]/div/div[5]/div/div[4]/button/span/span')
         like_button.click()
 
     def dislike(self):
-        dislike_button = self.driver.find_element(By.XPATH, '//*[@id="o-1556761323"]/div/div[1]/div/main/div['
-                                                            '1]/div/div/div[1]/div[1]/div/div[5]/div/div['
-                                                            '2]/button/span/span')
+        dislike_button = self.driver.find_element(By.XPATH, '//*[@id="o-1556761323"]/div/div[1]/div/main/div[1]/div/div/div[1]/div[1]/div/div[5]/div/div[2]/button/span/span')
         dislike_button.click()
 
     def close_popup(self):
