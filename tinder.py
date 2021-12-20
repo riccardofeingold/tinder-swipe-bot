@@ -7,7 +7,7 @@ import os
 from dotenv import load_dotenv
 
 class TinderBot:
-    def __init__(self):
+    def __init__(self, locations):
         load_dotenv()
         self.options = webdriver.ChromeOptions()
         self.options.add_experimental_option('prefs', {
@@ -23,6 +23,8 @@ class TinderBot:
 
         self.base_window = self.driver.window_handles[0]
 
+        self.locations = locations
+
     def login(self):
         self.driver.get('https://tinder.com')
 
@@ -32,6 +34,27 @@ class TinderBot:
         login_btn.click()
         gmail_login_window = self.driver.window_handles[1]
         self.driver.switch_to(gmail_login_window)
+
+    def change_location(self):
+        selected_location = random.choice(self.locations)
+        profile_btn = self.driver.find_element(By.XPATH, '//*[@id="o-1556761323"]/div/div[1]/div/aside/div/a')
+        profile_btn.click()
+        sleep(2)
+
+        map_btn = self.driver.find_element(By.XPATH, '//*[@id="settings"]/div/div/div/div[4]/div[1]/a[1]/div/div/div')
+        map_btn.click()
+        sleep(4)
+
+        search_input = self.driver.find_element(By.XPATH, '//*[@id="o-1556761323"]/div/div[1]/div/main/div[1]/div/div/div[5]/div[2]/div[1]/input')
+        search_input.send_keys(selected_location)
+        search_btn = self.driver.find_element(By.XPATH, '//*[@id="o-1556761323"]/div/div[1]/div/main/div[1]/div/div/div[5]/div[2]/div[1]/div[2]')
+        sleep(1)
+        search_btn.click()
+        sleep(2)
+
+        start_btn = self.driver.find_element(By.XPATH, '//*[@id="o-1556761323"]/div/div[1]/div/main/div[1]/div/div/div[2]/button')
+        start_btn.click()
+        sleep(4)
 
     def auto_swipe(self):
         while True:
@@ -48,7 +71,10 @@ class TinderBot:
                         try:
                             self.close_match()
                         except Exception:
-                            sleep(5)
+                            try:
+                                self.change_location()
+                            except Exception:
+                                sleep(4)
 
     def like(self):
         try:
@@ -77,6 +103,9 @@ class TinderBot:
         match_popup = self.driver.find_element(By.XPATH, '//*[@id="modal-manager-canvas"]/div/div/div[1]/div/div[3]/a')
         match_popup.click()
 
+select_location_btn = '//*[@id="o-1556761323"]/div/div[1]/div/main/div[1]/div/div/div[2]/button'
+search_btn = '//*[@id="o-1556761323"]/div/div[1]/div/main/div[1]/div/div/div[5]/div[2]/div[1]/div[2]'
 
-bot = TinderBot()
+locations = ['Bern', 'Zürich', 'Thun', 'Basel', 'Olten', 'Lausanne', 'Tessin', 'Murten', 'neuenburg switzerland', 'münchen', 'Berlin', 'Frankfurt', 'Cannes', 'Paris', 'London', 'Lisbon', 'Madrid', 'Sydney austrailia']
+bot = TinderBot(locations=locations)
 bot.auto_swipe()
