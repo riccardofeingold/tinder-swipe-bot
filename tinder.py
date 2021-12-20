@@ -5,7 +5,6 @@ import random
 from time import sleep
 import os
 from dotenv import load_dotenv
-from cookies import load_cookie
 
 class TinderBot:
     def __init__(self):
@@ -26,12 +25,6 @@ class TinderBot:
 
     def login(self):
         self.driver.get('https://tinder.com')
-
-        sleep(3)
-
-        login_btn = self.driver.find_element(By.XPATH, '//*[@id="o-1556761323"]/div/div[1]/div/main/div['
-                                                       '1]/div/div/div/div/header/div/div[2]/div[2]/a')
-        login_btn.click()
 
     def login_with_gmail(self, username, pwd):
         login_btn = self.driver.find_element(By.XPATH, '//*[@id="o-1335420887"]/div/div/div[1]/div/div[3]/span/div['
@@ -55,11 +48,18 @@ class TinderBot:
                         self.close_match()
 
     def like(self):
-        like_button = self.driver.find_element(By.XPATH, '//*[@id="o-1556761323"]/div/div[1]/div/main/div[1]/div/div/div[1]/div[1]/div/div[5]/div/div[4]/button/span/span')
+        try:
+            like_button = self.driver.find_element(By.XPATH, '//*[@id="o-1556761323"]/div/div[1]/div/main/div[1]/div/div/div[1]/div[1]/div/div[4]/div/div[4]/button/span/span')
+        except Exception:
+            like_button = self.driver.find_element(By.XPATH, '//*[@id="o-1556761323"]/div/div[1]/div/main/div[1]/div/div/div[1]/div[1]/div/div[5]/div/div[4]/button/span/span')
         like_button.click()
 
     def dislike(self):
-        dislike_button = self.driver.find_element(By.XPATH, '//*[@id="o-1556761323"]/div/div[1]/div/main/div[1]/div/div/div[1]/div[1]/div/div[5]/div/div[2]/button/span/span')
+        try:
+            dislike_button = self.driver.find_element(By.XPATH, '//*[@id="o-1556761323"]/div/div[1]/div/main/div[1]/div/div/div[1]/div[1]/div/div[5]/div/div[2]/button/span/span')
+        except Exception:
+            dislike_button = self.driver.find_element(By.XPATH, '//*[@id="o-1556761323"]/div/div[1]/div/main/div[1]/div/div/div[1]/div[1]/div/div[4]/div/div[2]/button/span/span')
+
         dislike_button.click()
 
     def close_popup(self):
@@ -75,5 +75,5 @@ class TinderBot:
         match_popup.click()
 
 
-# bot = TinderBot()
-# bot.login()
+bot = TinderBot()
+bot.auto_swipe()
