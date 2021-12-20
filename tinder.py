@@ -45,7 +45,10 @@ class TinderBot:
                     try:
                         self.close_superstar()
                     except Exception:
-                        self.close_match()
+                        try:
+                            self.close_match()
+                        except Exception:
+                            sleep(5)
 
     def like(self):
         try:
