@@ -6,9 +6,16 @@ from time import sleep
 import os
 from dotenv import load_dotenv
 
+
 class TinderBot:
     def __init__(self, locations):
         load_dotenv()
+
+        os.chdir("/Users/riccardofeingold")
+        os.system('Google\ Chrome --remote-debugging-port=9222 --user-data-dir="~/ChromeProfile"')
+
+        sleep(4)
+
         self.options = webdriver.ChromeOptions()
         self.options.add_experimental_option('prefs', {
             'geolocation': True,
@@ -24,6 +31,8 @@ class TinderBot:
         self.base_window = self.driver.window_handles[0]
 
         self.locations = locations
+        self.login()
+        sleep(4)
 
     def login(self):
         self.driver.get('https://tinder.com')
@@ -102,10 +111,3 @@ class TinderBot:
     def close_match(self):
         match_popup = self.driver.find_element(By.XPATH, '//*[@id="modal-manager-canvas"]/div/div/div[1]/div/div[3]/a')
         match_popup.click()
-
-select_location_btn = '//*[@id="o-1556761323"]/div/div[1]/div/main/div[1]/div/div/div[2]/button'
-search_btn = '//*[@id="o-1556761323"]/div/div[1]/div/main/div[1]/div/div/div[5]/div[2]/div[1]/div[2]'
-
-locations = ['Bern', 'Zürich', 'Thun', 'Basel', 'Olten', 'Lausanne', 'Tessin', 'Murten', 'neuenburg switzerland', 'münchen', 'Berlin', 'Frankfurt', 'Cannes', 'Paris', 'London', 'Lisbon', 'Madrid', 'Sydney austrailia']
-bot = TinderBot(locations=locations)
-bot.auto_swipe()
