@@ -6,15 +6,11 @@ from time import sleep
 import os
 from dotenv import load_dotenv
 
+# TODO: Add a function that stores instagram profiles
 
 class TinderBot:
     def __init__(self, locations):
         load_dotenv()
-
-        os.chdir("/Users/riccardofeingold")
-        os.system('Google\ Chrome --remote-debugging-port=9222 --user-data-dir="~/ChromeProfile"')
-
-        sleep(4)
 
         self.options = webdriver.ChromeOptions()
         self.options.add_experimental_option('prefs', {
@@ -32,7 +28,6 @@ class TinderBot:
 
         self.locations = locations
         self.login()
-        sleep(4)
 
     def login(self):
         self.driver.get('https://tinder.com')
