@@ -65,3 +65,7 @@ class NeuralNetwork:
         final_inputs = np.dot(self.weights_hidden_output, hidden_outputs)
         final_outputs = self.activation_function(final_inputs)
         return final_outputs
+
+input_nodes = 350 * 350
+hidden_nodes = 1000
+output_nodes = 2 # one for attractive = 1 and one for not attractive = 0
