@@ -18,9 +18,12 @@
 #     if "CF" in image:
 #         new_train_file.write(image)
 # new_train_file.close()
-import numpy
+
 import numpy as np
-import scipy
+from scipy import special
+from PIL import Image
+# import matplotlib.pyplot as plt
+# import matplotlib.image as mpimg
 
 # TODO: Normalize all values in CF_test.txt and CF_train.txt files by dividing all numbers by 5
 
@@ -36,7 +39,7 @@ class NeuralNetwork:
 
         self.learningrate = learningrate
 
-        self.activation_function = lambda x: scipy.special.expit(x)
+        self.activation_function = lambda x: special.expit(x)
         pass
 
     def train(self, input_list, target_list):
@@ -66,6 +69,61 @@ class NeuralNetwork:
         final_outputs = self.activation_function(final_inputs)
         return final_outputs
 
-input_nodes = 350 * 350
+
+input_nodes = 350*350
 hidden_nodes = 1000
-output_nodes = 2 # one for attractive = 1 and one for not attractive = 0
+output_nodes = 2
+learningrate = 0.5
+
+nn = NeuralNetwork(inputnodes=input_nodes, hiddennodes=hidden_nodes, outputnodes=output_nodes, learningrate=learningrate)
+file = open("train_and_test_data/CF_train.txt", "r")
+file_data = {}
+for line in file:
+    key, value = line.split()
+    file_data[key] = value
+
+file.close()
+
+for key, value in file_data.items():
+    image = Image.open(f"Images/{key}").convert('L')
+    image_array = np.array(image).flatten('F')
+    image_list = image_array.tolist()
+
+    scaled_input = (np.asfarray(image_list[0:]) / 255.0 * 0.99) + 0.01
+
+    targets = np.zeros(output_nodes) + 0.01
+    # img = mpimg.imread(f'Images/CF{i}.jpg')
+    # imgplot = plt.imshow(img)
+    # plt.show()
+
+    targets[int(float(value)/5)] = 0.99
+
+    nn.train(scaled_input, targets)
+
+with open("weights.txt", "w") as file_weights:
+    file_weights.write(nn.weights_input_hidden)
+    file_weights.write(nn.weights_hidden_output)
+
+test_data = {}
+file = open("train_and_test_data/CF_test.txt", "r")
+for line in file:
+    key, value = line.split()
+    file_data[key] = value
+file.close()
+
+scoreboard = []
+for key, value in file_data.items():
+    test_image = Image.open(f"Images/{key}").convert('L')
+    test_array = np.array(image).flatten('F')
+    test_list = image_array.tolist()
+    test_scaled_input = (np.asfarray(test_list[0:]) / 255.0 * 0.99) + 0.01
+    outputs = nn.query(test_scaled_input)
+
+    label = np.argmax(outputs[:,0])
+    if label == int(float(value)/5):
+        scoreboard.append(1)
+    else:
+        scoreboard.append(0)
+
+scorecard_array = np.asarray(scoreboard)
+print("performance: ", scorecard_array.sum() / scorecard_array.size)
